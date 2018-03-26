@@ -1,4 +1,3 @@
-package com.csg.mechanics;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;

@@ -1,5 +1,3 @@
-package com.csg.mechanics;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.AffineTransform;
@@ -10,54 +8,64 @@ public class CImage extends BufferedImage {
 	private AffineTransform affineTransform;
 	private double localX, localY;
 	private double curRotateAngle;
-	private int type;
-
-	public static final int TYPE_RECT = 0;
-	public static final int TYPE_OVAL = 1;
+	private int shape;
+	/** 形狀-矩形 */
+	public static final int SHAPE_RECT = 0;
+	/** 形狀-橢圓形 */
+	public static final int SHAPE_OVAL = 1;
 
 	public CImage(int width, int height, int imageType) {
 		super(width, height, imageType);
 		this.affineTransform = new AffineTransform();
 	}
 
-	public void draw(int type, Color color) {
+	public void draw(int shape, Color color, int... linePos) {
 		Graphics g = this.getGraphics();
 		g.setColor(color);
-		this.type = type;
-		switch (type) {
-		case TYPE_RECT:
+		this.shape = shape;
+		switch (shape) {
+		case SHAPE_RECT:
 			g.fill3DRect(0, 0, this.getWidth(), this.getHeight(), true);
 			break;
-		case TYPE_OVAL:
+		case SHAPE_OVAL:
 			g.fillOval(0, 0, this.getWidth(), this.getHeight());
 			break;
 		default:
-			throw new RuntimeException("type 不存在！current type is " + type);
+			throw new RuntimeException("shape 不存在！current shape is " + shape);
 		}
 
 	}
 
-	public int getType() {
-		return type;
+	public int getShape() {
+		return shape;
 	}
 
+	/**
+	 * 旋转
+	 * 
+	 * @param angdeg
+	 *            旋转角度
+	 */
 	public void rotate(double angdeg) {
 		this.curRotateAngle += angdeg;
-		double posX = this.localX + this.getWidth() / 2d;
-		double posY = this.localY + this.getHeight() / 2d;
-		System.out.println(this.localX + "--" + this.localY + "=====" + posX + "=" + posY);
 		// 按图形中心旋转
 		AffineTransform atf = new AffineTransform();
-		atf.setToRotation(Math.toRadians(angdeg), 150, 150);
+		atf.setToRotation(Math.toRadians(this.curRotateAngle), this.getWidth() / 2d, this.getHeight() / 2d);
 		this.affineTransform.concatenate(atf);
 	}
 
+	/**
+	 * 平移
+	 * 
+	 * @param tx
+	 *            x轴平移距离
+	 * @param ty
+	 *            y轴平移距离
+	 */
 	public void translate(double tx, double ty) {
-		this.affineTransform = new AffineTransform();
 		this.localX += tx;
 		this.localY += ty;
-		this.affineTransform.setToTranslation(tx, ty);
-
+		this.affineTransform.setToTranslation(this.localX, this.localY);
 	}
 
 	public AffineTransform getAffineTransform() {
