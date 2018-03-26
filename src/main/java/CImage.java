@@ -9,10 +9,37 @@ public class CImage extends BufferedImage {
 	private double localX, localY;
 	private double curRotateAngle;
 	private int shape;
+	/** 固定点 */
+	private CImageFixPoint fixPoint;
+	/** 弹簧 */
+	private CImageSpring spring;
+	/** y軸速度 */
+	private double yVelocity;
+	/** x軸速度 */
+	private double xVelocity;
+	/** 角速度 */
+	private double angularSpeed;
+
 	/** 形狀-矩形 */
 	public static final int SHAPE_RECT = 0;
 	/** 形狀-橢圓形 */
 	public static final int SHAPE_OVAL = 1;
+
+	public CImageSpring getSpring() {
+		return spring;
+	}
+
+	public void setSpring(CImageSpring spring) {
+		this.spring = spring;
+	}
+
+	public CImageFixPoint getFixPoint() {
+		return fixPoint;
+	}
+
+	public void setFixPoint(CImageFixPoint fixPoint) {
+		this.fixPoint = fixPoint;
+	}
 
 	public CImage(int width, int height, int imageType) {
 		super(width, height, imageType);
@@ -71,4 +98,33 @@ public class CImage extends BufferedImage {
 	public AffineTransform getAffineTransform() {
 		return this.affineTransform;
 	}
+
+	public double getyVelocity() {
+		return yVelocity;
+	}
+
+	public void setyVelocity(double yVelocity) {
+		this.yVelocity = yVelocity;
+	}
+
+	public double getxVelocity() {
+		return xVelocity;
+	}
+
+	public void setxVelocity(double xVelocity) {
+		this.xVelocity = xVelocity;
+	}
+
+	public double getAngularSpeed() {
+		return angularSpeed;
+	}
+
+	public void setAngularSpeed(double angularSpeed) {
+		this.angularSpeed = angularSpeed;
+	}
+
+	public double getBottomY() {
+		return this.localY + this.getHeight();
+	}
+
 }

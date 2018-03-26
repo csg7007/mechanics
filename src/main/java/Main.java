@@ -10,7 +10,7 @@ public class Main extends JPanel {
 	private CImage im = null;
 	private CImage im2 = null;
 	private int lx=200,ly=200;
-
+	private boolean isFirst=true;
 	// 构造方法，获得外部Image对像的引用
 	public Main(CImage im, CImage im2) {
 		this.im = im;
@@ -23,27 +23,34 @@ public class Main extends JPanel {
 	public void paint(Graphics g) {
 		lx--;
 		ly--;
-		g.clearRect(0, 0, 500, 500);
+		g.clearRect(0, 0, 600, 600);
 		Graphics2D g2D = (Graphics2D) g;
-		
+		if(isFirst) {
+			im.translate(100, 0);
+			im.setAngularSpeed(1);
+			g2D.drawImage(im, im.getAffineTransform(), null);
+			isFirst=false;
+			return;
+		}
 		if (null != im) {
-			im.translate(1, 1);
-			im.rotate(1);
+			ForceAnalysisResult result=ForceAnalysis.analysis(im);
+			im.translate(result.getXd(), result.getYd());
+			im.rotate(result.getAngle());
 			g2D.drawImage(im, im.getAffineTransform(), null);
 		}
-		if (null != im2) {
-			im2.translate(2, 5);
-			g2D.drawImage(im2, im2.getAffineTransform(), null);
-		}
-		g2D.drawLine(0, 0, lx, ly);
+//		if (null != im2) {
+//			im2.translate(2, 5);
+//			g2D.drawImage(im2, im2.getAffineTransform(), null);
+//		}
+		g2D.drawLine(0, 500, 600, 500);
 	}
 
 	public static void main(String[] args) {
 		JFrame jf = new JFrame();
 		Main jp = new Main(CImageFactory.getInstance(CImage.SHAPE_RECT, 100, 100, Color.blue),
 				CImageFactory.getInstance(CImage.SHAPE_OVAL, 100, 100, Color.GREEN));
-		jf.setBounds(200, 200, 500, 500);
-		jp.setSize(300, 300);
+		jf.setBounds(200, 200, 600, 600);
+		jp.setSize(500, 500);
 		jf.add(jp);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.setVisible(true);
